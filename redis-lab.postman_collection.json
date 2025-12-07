@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "Redis Lab - Full 6 Modules",
+    "_postman_id": "redis-lab-6-modules-collection",
+    "description": "Coleção completa com os 6 módulos: KeyValue, Cache, RateLimit, PubSub, Streams e Distributed Lock.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1️⃣ Module 1 - KeyValue",
+      "item": [
+        {
+          "name": "Set Key with TTL",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"user:1:name\",\n  \"value\": \"Edson\",\n  \"ttlSeconds\": 30\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/api/kv",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "kv"]
+            }
+          }
+        },
+        {
+          "name": "Get Key",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8081/api/kv/user:1:name",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "kv", "user:1:name"]
+            }
+          }
+        },
+        {
+          "name": "Key TTL",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8081/api/kv/user:1:name/ttl",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "kv", "user:1:name", "ttl"]
+            }
+          }
+        },
+        {
+          "name": "Key Exists",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8081/api/kv/user:1:name/exists",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "kv", "user:1:name", "exists"]
+            }
+          }
+        },
+        {
+          "name": "Delete Key",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:8081/api/kv/user:1:name",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "kv", "user:1:name"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2️⃣ Module 2 - Cache (@Cacheable)",
+      "item": [
+        {
+          "name": "Expensive Operation (Cached)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8081/cache/expensive?input=java",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["cache", "expensive"],
+              "query": [
+                { "key": "input", "value": "java" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3️⃣ Module 3 - Rate Limiting",
+      "item": [
+        {
+          "name": "Rate Limit Test",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8081/ratelimit/test?user=edson",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["ratelimit", "test"],
+              "query": [
+                { "key": "user", "value": "edson" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4️⃣ Module 4 - Pub/Sub",
+      "item": [
+        {
+          "name": "Publish Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "text/plain" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "Hello Redis Pub/Sub!"
+            },
+            "url": {
+              "raw": "http://localhost:8081/pubsub/publish",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["pubsub", "publish"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5️⃣ Module 5 - Redis Streams",
+      "item": [
+        {
+          "name": "Send Stream Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "text/plain" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "Mensagem via Stream"
+            },
+            "url": {
+              "raw": "http://localhost:8081/streams/send",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["streams", "send"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6️⃣ Module 6 - Distributed Lock",
+      "item": [
+        {
+          "name": "Test Distributed Lock",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8081/lock/test",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["lock", "test"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

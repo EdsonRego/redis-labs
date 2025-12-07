@@ -1,0 +1,242 @@
+# 🚀 Redis Lab — Java + Spring Boot (6 Módulos Independentes)
+
+Este projeto é um **laboratório completo de estudos com Redis**, usando **Java 17 e Spring Boot 3**, cobrindo **6 módulos independentes**:
+
+1. Key-Value + TTL
+2. Cache com `@Cacheable`
+3. Rate Limiting
+4. Pub/Sub
+5. Redis Streams (Fila + Consumer Group)
+6. Distributed Lock (Redlock)
+
+A proposta é oferecer **implementações práticas, isoladas e de fácil consulta**, permitindo estudar cada funcionalidade do Redis de forma clara e organizada.
+
+---
+
+# ⚙️ Tecnologias Utilizadas
+
+- **Java 17**
+- **Spring Boot 3.5**
+- **Spring Data Redis**
+- **Docker / Redis 7**
+- **Lettuce Client**
+- **Postman (Collections)**
+
+---
+
+# 📁 Estrutura do Projeto
+
+src/main/java/com.edsonlabs.redislab
+├── RedisLabApplication.java
+├── config
+│ ├── RedisConfig.java
+│ └── RedisCacheConfig.java
+│
+├── module1_keyvalue
+│ ├── api/KeyValueController.java
+│ ├── dto/KeyValueRequest.java
+│ └── service/KeyValueService.java
+│
+├── module2_cache
+│ ├── api/CacheController.java
+│ └── service/SlowService.java
+│
+├── module3_ratelimit
+│ ├── api/RateLimitController.java
+│ └── service/RateLimitService.java
+│
+├── module4_pubsub
+│ ├── config/RedisPubSubConfig.java
+│ ├── api/PubSubController.java
+│ ├── listener/MessageListener.java
+│ └── publisher/MessagePublisher.java
+│
+├── module5_streams
+│ ├── api/StreamController.java
+│ ├── producer/StreamProducer.java
+│ └── consumer/StreamConsumer.java
+│
+└── module6_lock
+├── api/LockController.java
+└── service/LockService.java
+
+yaml
+Copiar código
+
+Cada módulo é **100% independente** e pode ser estudado separadamente.
+
+---
+
+# 🐳 Subindo o Redis com Docker
+
+Arquivo `docker-compose.yml` incluído:
+
+```yaml
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis-lab
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+Subir:
+
+bash
+Copiar código
+docker compose up -d
+Testar:
+
+bash
+Copiar código
+docker exec -it redis-lab redis-cli
+PING
+🔥 Módulo 1 — Key-Value + TTL
+Objetivo: Gravação simples de chaves, leitura, deleção e TTL.
+
+Endpoint: criar chave
+bash
+Copiar código
+POST /api/kv
+{
+  "key": "user:1:name",
+  "value": "Edson",
+  "ttlSeconds": 30
+}
+Buscar valor
+pgsql
+Copiar código
+GET /api/kv/user:1:name
+Ver TTL
+ruby
+Copiar código
+GET /api/kv/user:1:name/ttl
+Apagar
+pgsql
+Copiar código
+DELETE /api/kv/user:1:name
+🔥 Módulo 2 — Cache com @Cacheable
+Objetivo: Demonstrar melhora de performance usando Redis como cache distribuído.
+
+Endpoint:
+
+pgsql
+Copiar código
+GET /cache/expensive?input=java
+Primeira chamada: ~3000ms
+
+Chamadas seguintes: instantâneo (cacheado no Redis)
+
+🔥 Módulo 3 — Rate Limiting
+Estratégia: máximo 5 requisições por minuto por usuário.
+
+Endpoint:
+
+sql
+Copiar código
+GET /ratelimit/test?user=edson
+Até 5 requisições → 200 OK
+
+Na 6ª requisição → 429 Too Many Requests
+
+🔥 Módulo 4 — Pub/Sub
+Objetivo: Publicação e consumo de eventos assíncronos.
+
+Publicar mensagem:
+bash
+Copiar código
+POST /pubsub/publish
+Body raw/text: "Hello Pub/Sub!"
+Listener (logs):
+vbnet
+Copiar código
+📥 Mensagem recebida pelo listener: Hello Pub/Sub!
+🔥 Módulo 5 — Redis Streams (Fila + Consumer Group)
+Redis Streams é um mecanismo robusto similar ao Kafka.
+
+Endpoint do Producer:
+
+bash
+Copiar código
+POST /streams/send
+Body: "Mensagem teste"
+Consumer: roda automaticamente a cada 3s
+Consumer Group: lab-group
+Stream Name: lab-stream
+
+Visualizar no Redis:
+
+sql
+Copiar código
+XRANGE lab-stream - +
+XINFO GROUPS lab-stream
+🔥 Módulo 6 — Distributed Lock (Redlock)
+Evita execução concorrente de tarefas críticas.
+
+Tentar executar:
+pgsql
+Copiar código
+GET /lock/test
+Resultados:
+
+Se lock disponível → "Task executed with lock."
+
+Se já existe lock → 409 Lock already acquired
+
+TTL configurado: 10 segundos.
+
+🧪 Postman Collection
+O projeto possui collections separadas para cada módulo.
+
+Importe em:
+
+mathematica
+Copiar código
+File → Import → redis-lab.postman_collection.json
+📚 Comandos úteis no Redis CLI
+Listar chaves:
+
+nginx
+Copiar código
+KEYS *
+TTL:
+
+nginx
+Copiar código
+TTL chave
+Streams:
+
+sql
+Copiar código
+XRANGE lab-stream - +
+XINFO STREAM lab-stream
+XINFO GROUPS lab-stream
+Pub/Sub:
+
+nginx
+Copiar código
+SUBSCRIBE lab-pubsub-channel
+🏗️ Extensões (para estudos futuros)
+Rate limiting com janela deslizante (Sliding Window)
+
+Circuit breaker com Redis
+
+Workflow/event sourcing com Streams
+
+Retenção e Replay de mensagens
+
+Consumo distribuído com múltiplos grupos
+
+Leader Election com Redis Locking
+
+👨‍💻 Autor
+Laboratório desenvolvido por Edson Gomes do Rego
+System Support Engineer • Java Developer • SRE • Cloud Infra • DevOps
+
+⭐ Se este projeto te ajudou…
+Considere dar uma ★ no GitHub!
+
+Assim você terá sempre fácil acesso e ajuda o repositório a crescer. 😊
+
+```bash
